@@ -17,18 +17,18 @@
 	<body class="w3-margin w3-light-grey" ng-app="showMeApp" ng-cloak ng-controller="showMeCtrl">
     <div id="wrapper" class="w3-margin">
 			<div class="w3-bar w3-red">
-			  <a href="#login" id="setW1" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" ng-click="showLogin()">Admin</a>
-			  <a href="https://openstates.org/find_your_legislator/" id="setW2" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" >Find Your Legislators</a>
-			  <a href="http://www.house.mo.gov/" id="setW3" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" >Go to MO House</a>
-			  <a href="http://www.senate.mo.gov/" id="setW4" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" >Go to MO Senate</a>
+			  <a href="#admin" id="setW1" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" ng-click="showLogin()">Admin</a>
+			  <a href="https://openstates.org/find_your_legislator/" id="setW2" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Find Your Legislators</a>
+			  <a href="http://www.house.mo.gov/" id="setW3" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Go to MO House</a>
+			  <a href="http://www.senate.mo.gov/" id="setW4" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Go to MO Senate</a>
 			  <a href="#" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium w3-hover-light-blue" ng-click="navFunction()">&#9776;</a>
 			</div>
 
 			<div id="vertNav" ng-show="showVertical" class="w3-bar-block w3-red w3-hide-large w3-hide-medium">
-				<a href="#login" class="w3-bar-item w3-button w3-hover-light-blue" ng-click="showLogin()">Admin</a>
-			  <a href="https://openstates.org/find_your_legislator/" class="w3-bar-item w3-button w3-hover-light-blue">Find Your Legislators</a>
-			  <a href="http://www.house.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue">Go to MO House</a>
-			  <a href="http://www.senate.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue">Go to MO Senate</a>
+				<a href="#admin" class="w3-bar-item w3-button w3-hover-light-blue" ng-click="showLogin()">Admin</a>
+			  <a href="https://openstates.org/find_your_legislator/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Find Your Legislators</a>
+			  <a href="http://www.house.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Go to MO House</a>
+			  <a href="http://www.senate.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Go to MO Senate</a>
 			</div>
 
 			<header class="w3-container w3-center">
@@ -41,8 +41,8 @@
 					<h3>Bills Currently in the House</h3>
 				</header> <!-- Maybe have outer div of ng-repeat and use ng-if to sort by branch?-->
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: houseFilter | orderBy: 'billNum'">
-						<h4><a ng-href="{{each.billLink}}" class="w3-hover-text-blue"><strong>{{ each.billNum }}</strong></a></h4>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" class="w3-hover-text-blue">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.</p>
+						<h4><a ng-href="{{each.billLink}}" class="w3-hover-text-blue" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a></h4>
+						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" class="w3-hover-text-blue" target="_blank" rel="noopener">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.</p>
 						<p><span class="actionWhy">Why</span>: {{each.why}}</p>
 				</div>
 			</section>
@@ -52,13 +52,13 @@
 					<h3>Bills Currently in the Senate</h3>
 				</header>
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: senateFilter | orderBy: 'billNum'">
-						<h4><a ng-href="{{each.billLink}}" class="w3-hover-text-blue"><strong>{{ each.billNum }}</strong></a></h4>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" class="w3-hover-text-blue">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.</p>
+						<h4><a ng-href="{{each.billLink}}" class="w3-hover-text-blue" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a></h4>
+						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" class="w3-hover-text-blue" target="_blank" rel="noopener">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.</p>
 						<p><span class="actionWhy">Why</span>: {{each.why}}</p>
 				</div>
 			</section>
 
-			<section ng-show="loginVisible" class="w3-container">
+			<section ng-show="loginVisible && !isValidLogin" class="w3-container">
 				<header>
 					<h3 id="login">Admin Login</h3>
 				</header>
@@ -216,7 +216,7 @@
 
 		</div> <!--end of wrapper div that enables sticky footer. All content but footer should be in it. -->
 
-		<footer class="w3-container w3-center w3-small">
+		<footer id="admin" class="w3-container w3-center w3-small">
 			<p>This is not an official site for the Missouri State Legislature. Problems? Contact webmaster: <a href="mailto:sarah@richardsonprogramming.com?Subject=About%20Your%20State%20Website" class="w3-hover-text-green">Sarah Richardson</a></p>
 		</footer>
 

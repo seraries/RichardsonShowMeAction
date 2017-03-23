@@ -1,5 +1,6 @@
 var app = angular.module('showMeApp', []);
 app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $window, $http) {
+
 	// these filters select bills for display from allBills based on branch of gov
 	$scope.houseFilter = function(element){
 			if (element.branch === "house") {
@@ -10,7 +11,8 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 			if (element.branch === "senate") {
 				return true;
 			}
-	};			
+	};		
+
 	// putting this here displays data on page open but doesn't dynamically update it
   $http.get("../php/getBills.php").then(function(response) {
     $scope.allBills = response.data;
@@ -22,13 +24,8 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	$scope.editModal = false;
 	$scope.showFailedLogin = false;
 	// result of login: determines display of insert and delete forms.
-	$scope.isValidLogin = false; // SETTING THIS TO TRUE WHILE TESTING
-	// pass this with every post request to insert or delete bill so I can check that its
-	// an authorized user with each request
-	var userLogin = {
-		username: "",
-		password: "",
-	};
+	$scope.isValidLogin = false; 	// SETTING THIS TO TRUE WHILE TESTING
+
 	// Don't know if I need to declare this here or not, play around later with it
 	$scope.billDetails = {
 		id: "",
@@ -86,8 +83,8 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	      if(response.data.message === "ok") {
 	      	$scope.isValidLogin = true;
 	      	$scope.loginVisible = false;
-	      	userLogin.username = $scope.loginInfo.username;
-	      	userLogin.password = $scope.loginInfo.password;
+	      	// userLogin.username = $scope.loginInfo.username;
+	      	// userLogin.password = $scope.loginInfo.password;
 	      	$scope.loginInfo.username = "";
 	      	$scope.loginInfo.password = "";
 	      }
@@ -161,11 +158,9 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 				$scope.allBills = response.data;
 				// reset form when done
 				$scope.editDetails = {};
-
 				$scope.editForm.$setUntouched();
-
 			});	
 		}
 	}
-
+	
 }]);
