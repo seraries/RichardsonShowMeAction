@@ -12,16 +12,21 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 				return true;
 			}
 	};		
-
-	// putting this here displays data on page open but doesn't dynamically update it
+		// putting this here displays bill data on page open but doesn't dynamically update it
   $http.get("../php/getBills.php").then(function(response) {
     $scope.allBills = response.data;
   });
+	// get contact info to fill select boxes
+	$http.get("../php/getContacts.php").then(function(response) {
+    $scope.contacts = response.data;
+  });
+
 	$scope.showVertical = false; // use for responsive navbar
 	$scope.loginVisible = false; // use to show login if navbar click
 	$scope.deleteModal = false;
 	$scope.insertModal = false;
 	$scope.editModal = false;
+	$scope.addContactModal = false;
 	$scope.showFailedLogin = false;
 	// result of login: determines display of insert and delete forms.
 	$scope.isValidLogin = false; 	// SETTING THIS TO TRUE WHILE TESTING
@@ -37,20 +42,6 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 		linkToWho: ""
 	};
 
-	// use this to send info on contact (title and link) to db for each bill
-	// based on form selection (store it by bill because I'll need to load it on page load)
-	$scope.contacts = [
-		{title: "Your Senator", link: ""},
-		{title: "Your Representative", link: ""},
-		{title: "Senate Commerce, Consumer Protection, Energy and the Environment Committee", link: "http://www.senate.mo.gov/commerce/"},
-		{title: "Senate Seniors, Families, and Children Committee", link: "http://www.senate.mo.gov/sfch/"},
-		{title: "Senate Economic Development Committee", link: "http://www.senate.mo.gov/edev/"},
-		{title: "House Children and Families Committee", link: "http://www.house.mo.gov/CommitteeIndividual.aspx?com=1423&year=2017&code=R"},
-		{title: "House Crime Prevention and Public Safety Committee", link: "http://www.house.mo.gov/CommitteeIndividual.aspx?com=1427&year=2017&code=R"},
-		{title: "House Health and Mental Health Policy Committee", link: "http://www.house.mo.gov/CommitteeIndividual.aspx?com=01435&year=2017&code=R"},
-		{title: "House Rules-Administrative Oversight Committee", link: "http://www.house.mo.gov/CommitteeIndividual.aspx?com=01443&year=2017&code=R"},
-		{title: "House Special Committee on Litigation Reform", link: "http://www.house.mo.gov/CommitteeIndividual.aspx?com=01452&year=2017&code=R"},
-	];
 	// put Our Rep and Our Senator (which have link value of #) first in options
 	$scope.contactFilter = function(x) {
 		if (x.link === "") {
@@ -72,9 +63,13 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 		var billRE = /^(HCR|HB|SCR|SB)\d+$/;
 		return billRE.test(billNumber);
 	}
-	$scope.isValidLink = function(billLink) {
+	$scope.isValidLink = function(link) {
 		var linkRE = /^(#|http:\/\/www\.senate\.mo\.gov|http:\/\/www\.house\.mo\.gov)/;
-		return linkRE.test(billLink);
+		return linkRE.test(link);
+	}
+	$scope.isValidContact = function(contactName) {
+		var contactRE = /^(House|Senate)/;
+		return contactRE.test(contactName);
 	}
 	$scope.loginSubmit = function() {
 		if ($scope.loginForm.$valid) {
@@ -97,8 +92,10 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 
 	$scope.insertSubmit = function() {
 		// all other deets for the bill object but these should be supplied by the model in html
+	
 		$scope.billDetails.who = $scope.contact.title;
 		$scope.billDetails.linkToWho = $scope.contact.link; 
+
 		if($scope.billDetails.link === "") {
 			$scope.billDetails.link = "#"; //default for href
 		} 
@@ -159,6 +156,19 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 				// reset form when done
 				$scope.editDetails = {};
 				$scope.editForm.$setUntouched();
+			});	
+		}
+	}
+
+		$scope.addContactSubmit = function() {
+		if($scope.isValidLogin) {
+			$http.post("../php/addContact.php", $scope.addContact).then(function(response) {
+			// get array of contacts again from database so I can update the ng-repeat scope object for contacts
+			$scope.contacts = response.data;
+				// reset form when done
+				$scope.addContact.title = "";
+				$scope.addContact.link = "";
+				$scope.addContactForm.$setUntouched();
 			});	
 		}
 	}
