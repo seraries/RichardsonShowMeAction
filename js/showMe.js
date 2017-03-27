@@ -20,16 +20,23 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	$http.get("../php/getContacts.php").then(function(response) {
     $scope.contacts = response.data;
   });
+  // get announcement info to both display and to fill select box for delete/edit announce forms
+  $http.get("../php/getAnnouncements.php").then(function(response) {
+    $scope.announce = response.data;
+  });
 
 	$scope.showVertical = false; // use for responsive navbar
 	$scope.loginVisible = false; // use to show login if navbar click
 	$scope.deleteModal = false;
 	$scope.insertModal = false;
 	$scope.editModal = false;
-	$scope.addContactModal = false;
+	//$scope.addContactModal = false;  don't have add contact section in this html, only in not
+	$scope.addAnnounceModal = false;
+	$scope.editAnnounceModal = false;
+	$scope.deleteAnnounceModal = false;
 	$scope.showFailedLogin = false;
 	// result of login: determines display of insert and delete forms.
-	$scope.isValidLogin = false; 	// SETTING THIS TO TRUE WHILE TESTING
+	$scope.isValidLogin = false; 
 
 	// Don't know if I need to declare this here or not, play around later with it
 	$scope.billDetails = {
@@ -41,7 +48,12 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 		who: "",
 		linkToWho: ""
 	};
-
+	// Eventually move these to DB as I did with committees
+	$scope.authors = ["Rep. Bruce Franks Jr.", "Sen. Kiki Curls", "Rep. Tracy McCreery",
+		"Rep. Stacey Newman", "Rep. Crystal Quade", "Sen. Jill Schupp", "Rep. Cora Faith Walker"];
+	//TODO: ADD a custom orderBy/Filter to put authors in the announce forms' select boxes in order of last name
+	// either as a string--split on spaces into array and compare 3rd element or as object.lastname
+	
 	// put Our Rep and Our Senator (which have link value of #) first in options
 	$scope.contactFilter = function(x) {
 		if (x.link === "") {
@@ -159,7 +171,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 			});	
 		}
 	}
-
+		/*
 		$scope.addContactSubmit = function() {
 		if($scope.isValidLogin) {
 			$http.post("../php/addContact.php", $scope.addContact).then(function(response) {
@@ -169,6 +181,53 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 				$scope.addContact.title = "";
 				$scope.addContact.link = "";
 				$scope.addContactForm.$setUntouched();
+			});	
+		}
+	} */
+
+		$scope.addAnnounceSubmit = function() {
+		if($scope.isValidLogin) {
+			$http.post("../php/addAnnouncement.php", $scope.addAnnounce).then(function(response) {
+				// get array of announcements again (newly updated)
+				$scope.announce = response.data;
+				// reset form when done
+				$scope.addAnnounce = {};
+				$scope.addAnnounceForm.$setUntouched();
+			});	
+		}
+	}
+
+	$scope.findAnnounce = function() {
+		if($scope.isValidLogin) {
+			$http.post("../php/findAnnouncement.php", $scope.editAnnounce.title.title).then(function(response) {
+				// only getting back one matching bill, hence [0]. Set form details to match database 
+				$scope.editAnnounce.message = response.data[0].message; 
+				$scope.editAnnounce.author = response.data[0].author; 
+
+			});
+		}
+	}
+		$scope.editAnnounceSubmit = function() {
+		if($scope.isValidLogin) {
+			$scope.editAnnounce.title = $scope.editAnnounce.title.title; // since I get an object from select box
+			$http.post("../php/editAnnouncement.php", $scope.editAnnounce).then(function(response) {
+				// get array of announcements again (newly updated)
+				$scope.announce = response.data;
+				// reset form when done
+				$scope.editAnnounce = {};
+				$scope.editAnnounceForm.$setUntouched();
+			});	
+		}
+	}
+	$scope.deleteTitle = {}; // think I have to declare this an object before using it below.
+		$scope.deleteAnnounceSubmit = function() {
+		if($scope.isValidLogin) {
+			$http.post("../php/deleteAnnouncement.php", $scope.deleteTitle.title).then(function(response) {
+				// get array of announcements again (newly updated)
+				$scope.announce = response.data;
+				// reset form when done
+				//$scope.deleteTitle = "";
+				$scope.deleteAnnounceForm.$setUntouched();
 			});	
 		}
 	}
