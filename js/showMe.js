@@ -49,7 +49,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 		linkToWho: ""
 	};
 	// Eventually move these to DB as I did with committees
-	$scope.authors = ["Rep. Bruce Franks Jr.", "Sen. Kiki Curls", "Rep. Tracy McCreery",
+	$scope.authors = ["Rep. Joe Adams", "Rep. Lauren Arthur", "Sen. Kiki Curls", "Rep. Bruce Franks Jr.", "Rep. Deb Lavender", "Rep. Tracy McCreery",
 		"Rep. Stacey Newman", "Rep. Crystal Quade", "Sen. Jill Schupp", "Rep. Cora Faith Walker"];
 	//TODO: ADD a custom orderBy/Filter to put authors in the announce forms' select boxes in order of last name
 	// either as a string--split on spaces into array and compare 3rd element or as object.lastname
@@ -123,9 +123,10 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 		}
 	}
 
+	$scope.billToDelete = {};
 	$scope.deleteSubmit = function() {
 		if($scope.isValidLogin) {
-			$http.post("../php/deleteBill.php", $scope.billToDelete).then(function(response) {
+			$http.post("../php/deleteBill.php", $scope.billToDelete.billNum).then(function(response) {
 			// get array of bills again from database so I can update the ng-repeat scope object for bills
 			$scope.allBills = response.data;
 				// reset form when done
@@ -137,7 +138,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 
 	$scope.findBill = function() {
 		if($scope.isValidLogin) {
-			$http.post("../php/findBill.php", $scope.editDetails.id).then(function(response) {
+			$http.post("../php/findBill.php", $scope.editDetails.id.billNum).then(function(response) {
 				// only getting back one matching bill, hence [0]. Set form details to match database 
 				$scope.editDetails.link = response.data[0].billLink; 
 				$scope.editDetails.branch = response.data[0].branch; 
@@ -156,6 +157,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 
 	$scope.editSubmit = function() {
 		if($scope.isValidLogin) {
+			$scope.editDetails.id = $scope.editDetails.id.billNum;
 			// before submitting, need to assign these editDetails to the select box option 
 			// they won't be automatically updated.
 			$scope.editDetails.linkToWho = $scope.editDetails.who.link; // IMP! This must come before next stmt

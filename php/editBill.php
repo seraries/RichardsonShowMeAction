@@ -10,19 +10,19 @@ $why = $postdata->why;
 $who = $postdata->who;
 $linkToWho = $postdata->linkToWho;
 
-file_put_contents("editTest.txt", "At start of file");
+//file_put_contents("editTest.txt", "At start of file");
 require_once('dbconnect.php');
 
 // TO-DO check valid user again somehow--send json via angular that has bill data and login data?
 
 // Use prepared statement to avoid sql injection attack
-$updateSql = $conn->prepare("UPDATE bills SET billLink=?, branch=?, position=?, why=?, contactTitle=?, contactLink=? WHERE billNum=?"); 
+$updateSql = $conn->prepare("UPDATE bills SET billLink=?, branch=?, position=?, why=?, contactTitle=?, contactLink=?, updateTime=NOW() WHERE billNum=?"); 
 
 // "s" means the database expects a string
 $updateSql->bind_param("sssssss", $link, $branch, $vote, $why, $who, $linkToWho, $id);
 
 if ($updateSql->execute() === TRUE) {
-    file_put_contents("editTest.txt", " record updated!! ", FILE_APPEND);
+    // file_put_contents("editTest.txt", " record updated!! ", FILE_APPEND);
 } else {
     // echo "Error: " . $sql . "<br>" . $conn->error;
     // TO-DO: The line above created a ng-repeat dupes error, instead I want to 
@@ -32,7 +32,7 @@ $updateSql->close();
 file_put_contents("editTest.txt", "At end of file", FILE_APPEND);
 
 // now send back updated array of bills
-$sql = "SELECT billNum, billLink, branch, position, why, contactTitle, contactLink FROM bills";
+$sql = "SELECT billNum, billLink, branch, position, why, contactTitle, contactLink, insertTime, updateTime FROM bills";
 
 $result = $conn->query($sql);
 

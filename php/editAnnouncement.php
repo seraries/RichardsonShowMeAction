@@ -28,7 +28,7 @@ $updateSql->close();
 file_put_contents("editTest.txt", "At end of file", FILE_APPEND);
 
 // now send back updated array of announcements
-$sql = "SELECT author, message, title FROM announce ORDER BY insertTime";
+$sql = "SELECT author, message, title FROM announce ORDER BY insertTime DESC";
 
 $result = $conn->query($sql);
 

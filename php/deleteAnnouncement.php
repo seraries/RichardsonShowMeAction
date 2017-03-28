@@ -16,7 +16,7 @@ if ($deleteSql->execute() === TRUE) {
 
 $deleteSql->close();
 
-$sql = "SELECT author, message, title FROM announce ORDER BY insertTime";
+$sql = "SELECT author, message, title FROM announce ORDER BY insertTime DESC";
 
 $result = $conn->query($sql);
 

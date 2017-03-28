@@ -2,9 +2,8 @@
 
 require_once('dbconnect.php');
 
-$sql = "SELECT billNum, billLink, branch, position, why, contactTitle, contactLink FROM bills";
-// fig out how to make a json object that has 2 data sets, one for house bills and one for senate
-// then do two select statements to get these so they will be separate when returned to angular
+$sql = "SELECT billNum, billLink, branch, position, why, contactTitle, contactLink, insertTime, updateTime FROM bills";
+
 $result = $conn->query($sql);
 
 $array = array();
@@ -23,6 +22,6 @@ $array = json_encode($array);
 echo $array;
 
 $conn->close();
-file_put_contents("insertUser.txt", "at end of file", FILE_APPEND);
+// file_put_contents("insertUser.txt", $array);
 
 ?>
