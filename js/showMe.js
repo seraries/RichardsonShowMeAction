@@ -105,6 +105,9 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 		}
 	}
 	// preliminary check before adding bill, called when bill id field loses focus
+	// this only checks current array of allBills--the check done on the back end
+	// in the insertSubmit function will check the database in case another user
+	// added a bill that doesn't appear in this user's current array (and will update this user's array)
 	$scope.checkDupe = function() {
 		if($scope.billDetails.id === ""){
 			// do nothing, no bill num entered

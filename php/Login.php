@@ -40,12 +40,11 @@ $resp->message = "no";
 while ($user = $result->fetch_object()) {
 	// Hashing the password with its hash as the salt returns the same hash
 	if ( hash_equals($user->hash, crypt($password, $user->hash)) ) {
-	  // Ok!
-		file_put_contents("testData.txt", "success! ");
+		//file_put_contents("testData.txt", "success! ");
 		$resp->message = "ok";
 		//file_put_contents("testData.txt", $resp->message, FILE_APPEND);
 		$resp = json_encode($resp);
-		file_put_contents("testData.txt", $resp, FILE_APPEND);
+		//file_put_contents("testData.txt", $resp, FILE_APPEND);
 		echo $resp;
 	}
 }

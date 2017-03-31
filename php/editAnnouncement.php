@@ -6,7 +6,7 @@ $title = $postdata->title;
 $author = $postdata->author;
 $message = $postdata->message;
 
-file_put_contents("editTest.txt", "At start of file");
+//file_put_contents("editTest.txt", "At start of file");
 require_once('dbconnect.php');
 
 // TO-DO check valid user again somehow--send json via angular that has bill data and login data?
@@ -18,14 +18,13 @@ $updateSql = $conn->prepare("UPDATE announce SET author=?, message=? WHERE title
 $updateSql->bind_param("sss", $author, $message, $title);
 
 if ($updateSql->execute() === TRUE) {
-    file_put_contents("editTest.txt", " record updated!! ", FILE_APPEND);
+    //file_put_contents("editTest.txt", " record updated!! ", FILE_APPEND);
 } else {
     // echo "Error: " . $sql . "<br>" . $conn->error;
     // TO-DO: The line above created a ng-repeat dupes error, instead I want to 
     // let user know insert failed 
 }
 $updateSql->close();
-file_put_contents("editTest.txt", "At end of file", FILE_APPEND);
 
 // now send back updated array of announcements
 $sql = "SELECT author, message, title FROM announce ORDER BY insertTime DESC";

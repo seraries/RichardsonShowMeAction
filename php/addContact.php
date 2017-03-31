@@ -13,7 +13,7 @@ $insertSql = $conn->prepare("INSERT INTO stateContacts (title, link) VALUES (?, 
 $insertSql->bind_param("ss", $title, $link);
 
 if ($insertSql->execute() === TRUE) {
-    file_put_contents("addTest.txt", " new record created!! ", FILE_APPEND);
+    //file_put_contents("addTest.txt", " new record created!! ", FILE_APPEND);
 } else {
     // echo "Error: " . $sql . "<br>" . $conn->error;
     // TO-DO: The line above created a ng-repeat dupes error, instead I want to 
@@ -43,7 +43,5 @@ $array = json_encode($array);
 echo $array;
 
 $conn->close();
-
-file_put_contents("addTest.txt", "at end of file", FILE_APPEND);
 
 ?>
