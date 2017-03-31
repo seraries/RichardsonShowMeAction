@@ -16,7 +16,7 @@ if ($deleteSql->execute() === TRUE) {
 
 $deleteSql->close();
 
-$sql = "SELECT billNum, billLink, branch, position, why, contactTitle, contactLink FROM bills";
+$sql = "SELECT * FROM bills";
 
 $result = $conn->query($sql);
 

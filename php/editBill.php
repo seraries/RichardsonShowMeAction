@@ -32,7 +32,7 @@ $updateSql->close();
 file_put_contents("editTest.txt", "At end of file", FILE_APPEND);
 
 // now send back updated array of bills
-$sql = "SELECT billNum, billLink, branch, position, why, contactTitle, contactLink, insertTime, updateTime FROM bills";
+$sql = "SELECT * FROM bills";
 
 $result = $conn->query($sql);
 

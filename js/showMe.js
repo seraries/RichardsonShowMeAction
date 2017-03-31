@@ -37,6 +37,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	$scope.showFailedLogin = false;
 	// result of login: determines display of insert and delete forms.
 	$scope.isValidLogin = false; 
+	$scope.billDupeError = false;
 
 	// Don't know if I need to declare this here or not, play around later with it
 	$scope.billDetails = {
@@ -49,8 +50,10 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 		linkToWho: ""
 	};
 	// Eventually move these to DB as I did with committees
-	$scope.authors = ["Rep. Joe Adams", "Rep. Lauren Arthur", "Sen. Kiki Curls", "Rep. Bruce Franks Jr.", "Rep. Deb Lavender", "Rep. Tracy McCreery",
-		"Rep. Stacey Newman", "Rep. Crystal Quade", "Sen. Jill Schupp", "Rep. Cora Faith Walker"];
+	$scope.authors = ["Rep. Joe Adams", "Rep. Lauren Arthur", "Rep. Michael Butler", "Sen. Kiki Curls", 
+	"Rep. Brandon Ellington", "Rep. Bruce Franks Jr.", "Rep. Deb Lavender", "Rep. Tracy McCreery", 
+	"Rep. Sue Meredith", "Rep. Gina Mitten", "Rep. Judy Morgan", "Rep. Jay Mosley", "Rep. Stacey Newman", 
+	"Rep. Joshua Peters", "Rep. Crystal Quade", "Sen. Jill Schupp", "Rep. Martha Stevens", "Rep. Cora Faith Walker"];
 	//TODO: ADD a custom orderBy/Filter to put authors in the announce forms' select boxes in order of last name
 	// either as a string--split on spaces into array and compare 3rd element or as object.lastname
 	
@@ -72,7 +75,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	}
 
 	$scope.isValidBill = function(billNumber) {
-		var billRE = /^(HCR|HB|SCR|SB)\d+$/;
+		var billRE = /^(HCR|HB|SCR|SB)\d+/; // removed $ at end of regex string so sister bills can be added
 		return billRE.test(billNumber);
 	}
 	$scope.isValidLink = function(link) {
@@ -101,24 +104,51 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	    });
 		}
 	}
+	// preliminary check before adding bill, called when bill id field loses focus
+	$scope.checkDupe = function() {
+		if($scope.billDetails.id === ""){
+			// do nothing, no bill num entered
+		}
+		else {
+			for(i=0; i<$scope.allBills.length; i++) {
+				if ($scope.allBills[i].billNum === $scope.billDetails.id) {
+					$scope.billDupeError = true;
+				}
+				else {
+					$scope.billDupeError = false;
+				}
+			}
+		}
+	}
 
 	$scope.insertSubmit = function() {
 		// all other deets for the bill object but these should be supplied by the model in html
-	
 		$scope.billDetails.who = $scope.contact.title;
 		$scope.billDetails.linkToWho = $scope.contact.link; 
-
 		if($scope.billDetails.link === "") {
 			$scope.billDetails.link = "#"; //default for href
 		} 
 		if($scope.isValidLogin) {
 			$http.post("../php/insertBill.php", $scope.billDetails).then(function(response) {
-			// get array of bills again from database so I can update the ng-repeat scope object for bills
-			$scope.allBills = response.data;
-				// reset form when done
-				$scope.billDetails = {};
-				$scope.contact = ""; // resets the select box
-				$scope.insertForm.$setUntouched();
+				// check database for duplicate (instead of just current array, as above)
+				if(response.data.message === "dupe"){
+					$scope.billDupeError = true; // even though this was a dupe, go ahead and 
+					// update array in case someone else just entered this bill and it isn't showing up 
+					// on current user's computer. But this prob. doesn't happen since i'm using ng-blur 
+					// to check dupes before it gets to back end
+					 $http.get("../php/getBills.php").then(function(response) {
+    				$scope.allBills = response.data;
+  				});
+
+				}
+				else {
+					// get array of bills again from database so I can update the ng-repeat scope object for bills
+					$scope.allBills = response.data;
+					// reset form when done
+					$scope.billDetails = {};
+					$scope.contact = ""; // resets the select box
+					$scope.insertForm.$setUntouched();
+				}
 			});	
 		}
 	}

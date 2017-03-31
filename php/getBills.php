@@ -2,7 +2,7 @@
 
 require_once('dbconnect.php');
 
-$sql = "SELECT billNum, billLink, branch, position, why, contactTitle, contactLink, insertTime, updateTime FROM bills";
+$sql = "SELECT * FROM bills";
 
 $result = $conn->query($sql);
 
