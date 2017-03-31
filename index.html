@@ -124,7 +124,7 @@
 							  <p class="smallPrint">*Select to save the bill to the database, but not show it on the webpage. Can add it to the webpage later using the Edit form and selecting House or Senate.</p>
 							</p>
 							<span class="error" ng-show="billDupeError">This bill number already exists. Use the Edit Bill form to see it's info, modify it, and/or make it active again.</span>
-							<p>
+							<p> 
 								<label for="insertBill">Bill to insert: </label>
 								<input type="text" name="insertBill" ng-model="billDetails.id" placeholder="e.g. SB28 or SB28/HB290" ng-blur="checkDupe()" required > <span class="error" ng-show="insertForm.insertBill.$touched && !isValidBill(billDetails.id)">Bills must begin with HCR, HB, SB, or SCR and have no space between prefix and digits, e.g., SB28</span>
 							</p>
