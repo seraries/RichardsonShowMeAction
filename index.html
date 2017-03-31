@@ -44,6 +44,27 @@
 				<h2>Bills Requiring Immediate Action!</h2>
 			</header>
 
+			<!--buttons for each issue and toggles show/hide bills for issue below-->
+	    <div>
+	    <p>Click buttons below to show or hide bills for each issue.</p>
+	    </div>
+	    <div>
+	    	<button ng-repeat="type in issueTypes" ng-click="toggleBtn(type.show)" class="w3-button w3-round-small w3-light-blue btn-space">{{type.name}}</button>	
+	    </div>
+
+	    <!--divs for listing bills by their issue, hidden by default-->
+	    <section class="w3-panel w3-white" ng-repeat="type in issueTypes" ng-show={{type.show}}>
+	    	<header class="w3-center">
+	    		<h3><strong>{{type.name}}</strong></h3>
+	    	</header>
+	    	<div ng-repeat="each in filteredBills = (allBills | issueFilter:type.name) | orderBy: 'billNum'">
+	    		<h4><a ng-href="{{each.billLink}}" class="w3-hover-text-blue" target="_blank" rel="noopener"><strong>{{each.billNum}}</strong></a></h4>
+	    		<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" class="w3-hover-text-blue w3-text-blue-grey" target="_blank" rel="noopener">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.</p>
+	    		<p><span class="actionWhy">Why</span>: {{each.why}}</p>
+	    	</div> 	
+	    	<p ng-hide="filteredBills.length">No bills relating to this issue are currently featured. Check back soon!</p>
+	    </section>
+
 			<section class="w3-container">
 				<header>
 					<h3>Bills Currently in the House</h3>
@@ -144,7 +165,7 @@
 							</p>
 							<p>
 								<label for="whyItMatters" class="whyVote">Summary and Why We Should Advocate For/Against this Bill:</label>
-								<textarea maxlength="580" name="whyItMatters" ng-model="billDetails.why" placeholder="Brief summary of bill and talking points for activists to use when calling legislators. About 150 words max." required></textarea>
+								<textarea maxlength="980" name="whyItMatters" ng-model="billDetails.why" placeholder="Brief summary of bill and talking points for activists to use when calling legislators. About 150 words max." required></textarea>
 							</p>
 							<p>
 								<label for="contact">Who Should We Contact About this Bill? <span class="error" ng-show="insertForm.contact.$touched && insertForm.contact.$invalid">Select a Contact</span></label>
@@ -205,7 +226,7 @@
 						</p>
 						<p>
 							<label for="editWhy" class="whyVote">Summary and Why We Should Advocate For/Against this Bill:</label>
-							<textarea maxlength="580" name="editWhy" ng-model="editDetails.why" placeholder="Brief summary of bill and talking points for activists to use when calling legislators. About 150 words max." required></textarea>
+							<textarea maxlength="980" name="editWhy" ng-model="editDetails.why" placeholder="Brief summary of bill and talking points for activists to use when calling legislators. About 150 words max." required></textarea>
 						</p>
 						<p>
 							<label for="editWho">Who Should We Contact About this Bill? <span class="error" ng-show="editForm.editWho.$touched && editForm.editWho.$invalid">Select a Contact</span></label>

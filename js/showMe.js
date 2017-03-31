@@ -1,4 +1,36 @@
 var app = angular.module('showMeApp', []);
+// filter resources by issue and create sections of bills (divs) for each issue type
+app.filter('issueFilter', [ function() {
+	return function(items, issue) {
+		var filtered = [];
+		var regex = "";
+		switch (issue) {
+			case "Gun Control":
+			regex = /( guns?| firearms?| ammunitions?)/i;
+			break;
+			case "Health Care":
+			regex = /( health care| medical| medicines?| healthcare| medicaid| diseases?)/i;
+			break;
+			case "Education":
+			regex = /( educates?| education| teachers?| curriculum| charter schools?)/i;
+			break;
+			case "Civil Rights":
+			regex = /( protected traits?| discriminate| discrimination| discriminatory| human rights)/i;
+			break;
+			case "Women's Rights":
+			regex = /( abortions?| fetus| unborn| fetal remains| pregnancy| family planning| alternative-to-abortion)/i;
+			break;
+		}
+		angular.forEach(items, function(bill) {
+			// if this string--the bill summary and talking point--contains the regex, add this bill to array
+    	if(regex.test(bill.why)) {
+    		filtered.push(bill);
+    	}
+		});
+		return filtered;
+	}
+}]);
+
 app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $window, $http) {
 
 	// these filters select bills for display from allBills based on branch of gov
@@ -38,6 +70,19 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	// result of login: determines display of insert and delete forms.
 	$scope.isValidLogin = false; 
 	$scope.billDupeError = false;
+
+	$scope.guns = false;
+	$scope.education = false;
+	$scope.health = false;
+	$scope.civil = false;
+	$scope.women = false;
+	// make buttons using this array and use it for issues filtering
+	$scope.issueTypes = [{name: "Education", show: "education"}, {name: "Health Care", show: "health"},  
+	{name: "Civil Rights", show: "civil"}, {name: "Gun Control", show: "guns"}, {name: "Women's Rights", show: "women"}];
+
+	$scope.toggleBtn = function(showString) {
+  	$scope[showString] = !$scope[showString];
+  }
 
 	// Don't know if I need to declare this here or not, play around later with it
 	$scope.billDetails = {

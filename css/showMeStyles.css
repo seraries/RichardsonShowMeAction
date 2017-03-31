@@ -35,6 +35,9 @@ for these elements doesn't override w3.css stylesheet
 	font-style: italic;
 	text-decoration: underline;
 }
+.btn-space {
+	margin: 10px;
+}
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   font-size: 10px;
 }
