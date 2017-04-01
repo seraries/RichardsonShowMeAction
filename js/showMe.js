@@ -94,6 +94,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
     $scope.allBills = response.data;
     // for users--not admin, whose reloads with form submits will negate this--this changes
     // the links for Your Senator and Your Representative to mailto: hrefs
+    // is this call a duplicate of js85-90
     if(!$scope.noContacts){
     	$scope.replaceUserLegInfo();
     }
@@ -113,6 +114,8 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
   	$window.localStorage.setItem("senator", JSON.stringify($scope.senator));
   	$window.localStorage.setItem("rep", JSON.stringify($scope.rep));
   	$scope.noContacts = false;
+  	$scope.replaceUserLegInfo();
+
   }
   $scope.removeLeg = function() {
   	$scope.senator = null;
