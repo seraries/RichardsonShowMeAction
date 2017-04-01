@@ -43,10 +43,60 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 			if (element.branch === "senate") {
 				return true;
 			}
-	};		
-		// putting this here displays bill data on page open but doesn't dynamically update it
+	};
+	$scope.replaceUserLegInfo = function(){
+  	angular.forEach($scope.allBills, function(item){
+  		// if they've reset their leg info (removed it from local storage)
+  		if (($scope.senator === null) || ($scope.rep === null)) {
+				if((item.contactTitle === "Your Senator") || (item.contactTitle === "Your Representative")){
+	  			item.contactLink = "";
+	  			item.phone = "";
+  			}
+  		}
+  		// else they are adding it, so change the info in allBills array to match it.
+  		else {
+  			if(item.contactTitle === "Your Senator"){
+	  			item.contactLink = $scope.senator.email;
+	  			item.phone = $scope.senator.number;
+  			}
+  			else if(item.contactTitle === "Your Representative"){
+	  			item.contactLink = $scope.rep.email;
+	  			item.phone = $scope.rep.number;
+  			}
+  		}
+  	});	
+  };	
+  // get contact count; create var if not there in local storage already
+  $scope.numContacts = $window.localStorage.getItem("numContacts");
+  if ($scope.numContacts === null) {
+  	$scope.numContacts = 0;
+  	$window.localStorage.setItem("numContacts", $scope.numContacts);
+  }
+  else {
+  	$scope.numContacts = parseInt($scope.numContacts);
+  }
+	// get user's rep and sen if stored in local storage, will get back either an object, or null
+  $scope.senator = $window.localStorage.getItem("senator"); 
+  $scope.rep = $window.localStorage.getItem("rep");
+
+  if(($scope.senator === null) || ($scope.rep === null)){
+  	$scope.noContacts = true;
+  }
+  else {
+  	$scope.senator = JSON.parse($scope.senator);
+  	$scope.rep = JSON.parse($scope.rep);
+  	$scope.noContacts = false;
+  	$scope.replaceUserLegInfo();
+  }
+
+  // putting this here displays bill data on page open but doesn't dynamically update it
   $http.get("../php/getBills.php").then(function(response) {
     $scope.allBills = response.data;
+    // for users--not admin, whose reloads with form submits will negate this--this changes
+    // the links for Your Senator and Your Representative to mailto: hrefs
+    if(!$scope.noContacts){
+    	$scope.replaceUserLegInfo();
+    }
   });
 	// get contact info to fill select boxes
 	$http.get("../php/getContacts.php").then(function(response) {
@@ -57,6 +107,27 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
     $scope.announce = response.data;
   });
 
+  $scope.addLeg = function() {
+  	$scope.senator.email = "mailto:" + $scope.senator.email; 
+  	$scope.rep.email = "mailto:" + $scope.rep.email; 
+  	$window.localStorage.setItem("senator", JSON.stringify($scope.senator));
+  	$window.localStorage.setItem("rep", JSON.stringify($scope.rep));
+  	$scope.noContacts = false;
+  }
+  $scope.removeLeg = function() {
+  	$scope.senator = null;
+  	$scope.rep = null;
+  	$window.localStorage.removeItem("senator");
+  	$window.localStorage.removeItem("rep");
+  	$scope.replaceUserLegInfo();
+  	$scope.noContacts = true;
+  	$scope.showRemoveWarning = false;
+  }
+  $scope.updateCount = function() {
+  	$scope.numContacts += 1;
+  	$window.localStorage.setItem("numContacts", $scope.numContacts);
+  }
+  $scope.showRemoveWarning = false;
 	$scope.showVertical = false; // use for responsive navbar
 	$scope.loginVisible = false; // use to show login if navbar click
 	$scope.deleteModal = false;
