@@ -22,8 +22,9 @@ app.filter('issueFilter', [ function() {
 			break;
 		}
 		angular.forEach(items, function(bill) {
-			// if this string--the bill summary and talking point--contains the regex, add this bill to array
-    	if(regex.test(bill.why)) {
+		// if this string--the bill summary and talking points--contains the regex, add this bill to the array
+    	// and do so only if the bill is not marked inactive
+    	if(regex.test(bill.why) && !(bill.branch==="inactive")) {
     		filtered.push(bill);
     	}
 		});
@@ -136,7 +137,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	$scope.deleteModal = false;
 	$scope.insertModal = false;
 	$scope.editModal = false;
-	//$scope.addContactModal = false;  don't have add contact section in this html, only in not
+	//$scope.addContactModal = false;  
 	$scope.addAnnounceModal = false;
 	$scope.editAnnounceModal = false;
 	$scope.deleteAnnounceModal = false;
@@ -194,7 +195,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	}
 
 	$scope.isValidBill = function(billNumber) {
-		var billRE = /^(HCR|HB|SCR|SB)\d+/; // removed $ at end of regex string so sister bills can be added
+		var billRE = /^(HCR|HB|SCR|SB|SJR|HJR)\d+/; // removed $ at end of regex string so sister bills can be added
 		return billRE.test(billNumber);
 	}
 	$scope.isValidLink = function(link) {
