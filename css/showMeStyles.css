@@ -9,6 +9,10 @@ footer {
 a {
 	text-decoration: none;
 }
+.selected {
+	color:#000!important;
+	background-color:#ddffdd!important;
+}
 #setW1 {
 	width: 20%;
 }
