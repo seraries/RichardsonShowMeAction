@@ -109,7 +109,7 @@
 	    	</header>
 	    	<div class="w3-card w3-margin-bottom w3-pale-green w3-padding" ng-repeat="each in filteredBills = (allBills | issueFilter:type.name) | orderBy: 'billNum'">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
-	    		<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
+	    		<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 	    		<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 	    	</div> 	
 	    	<p ng-hide="filteredBills.length">No bills relating to this issue are currently featured. Check back soon!</p>
@@ -121,7 +121,7 @@
 				</header> 
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: houseFilter | orderBy: 'billNum'">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
+						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
 			</section>
@@ -132,7 +132,7 @@
 				</header>
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: senateFilter | orderBy: 'billNum'">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
+						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
 			</section>
@@ -143,7 +143,7 @@
 				</header> 
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: govFilter | orderBy: 'billNum'">
 						<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to vote {{each.position}} on this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
+						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
 			</section>
@@ -218,13 +218,17 @@
 								<span class="error" ng-show="insertForm.insertLink.$touched && !isValidLink(billDetails.link)">Links to bills must begin with http:&#x2F;&#x2F;www.house.mo.gov or http:&#x2F;&#x2F;www.senate.mo.gov</span>
 							</p>
 							<p>
-								<label for="vote">How We Should Ask Legislators to Vote on this Bill: </label>
+								<label for="vote">Ask Legislators to Take What Position on this Bill: </label>
 							</p>
 							<p>
-							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="YES" required>
-							  <label class="w3-validate">For</label>
-							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="NO" required>
-							  <label class="w3-validate">Against</label>
+							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Support" required>
+							  <label class="w3-validate">Support</label>
+							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Oppose" required>
+							  <label class="w3-validate">Oppose</label>
+							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Veto" required>
+							  <label class="w3-validate">Veto</label>
+							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Approve" required>
+							  <label class="w3-validate">Approve</label>
 							</p>
 							<p>
 								<label for="whyItMatters" class="whyVote">Summary and Why We Should Advocate For/Against this Bill:</label>
@@ -281,13 +285,17 @@
 						  <p class="smallPrint">&ast;Removes bill from webpage but doesn&apos;t delete it, in case it becomes actionable again.</p>
 						</p>
 						<p>
-							<label for="editVote">How We Should Ask Legislators to Vote on this Bill: </label>
+							<label for="editVote">Ask Legislators to Take What Position on this Bill: </label>
 						</p>
 						<p>
-						  <input class="w3-radio" type="radio" name="editVote" ng-model="editDetails.vote" value="YES" required>
-						  <label class="w3-validate">For</label>
-						  <input class="w3-radio" type="radio" name="editVote" ng-model="editDetails.vote" value="NO" required>
-						  <label class="w3-validate">Against</label>
+						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Support" required>
+						  <label class="w3-validate">Support</label>
+						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Oppose" required>
+						  <label class="w3-validate">Oppose</label>
+						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Veto" required>
+						  <label class="w3-validate">Veto</label>
+						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Approve" required>
+						  <label class="w3-validate">Approve</label>
 						</p>
 						<p>
 							<label for="editWhy" class="whyVote">Summary and Why We Should Advocate For/Against this Bill:</label>

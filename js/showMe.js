@@ -20,6 +20,12 @@ app.filter('issueFilter', [ function() {
 			case "Women's Rights":
 			regex = /( abortions?| fetus| unborn| fetal remains| pregnancy| family planning)/i;
 			break;
+			case "Criminal Justice":
+			regex = /( criminals?| jails?| youth violence| acts of violence)/i;
+			break;
+			case "Environment":
+			regex = /( toxic waste| environmental| pollution| clean energy| solar)/i;
+			break;
 		}
 		angular.forEach(items, function(bill) {
 		// if this string--the bill summary and talking points--contains the regex, add this bill to the array
@@ -208,9 +214,12 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	$scope.health = false;
 	$scope.civil = false;
 	$scope.women = false;
+	$scope.criminal = false;
+	$scope.environ = false;
 	// make buttons using this array and use it for issues filtering
 	$scope.issueTypes = [{name: "Education", show: "education"}, {name: "Health Care", show: "health"},  
-	{name: "Civil Rights", show: "civil"}, {name: "Gun Control", show: "guns"}, {name: "Women's Rights", show: "women"}];
+	{name: "Civil Rights", show: "civil"}, {name: "Gun Control", show: "guns"}, {name: "Women's Rights", show: "women"}, 
+	{name: "Criminal Justice", show: "criminal"}, {name: "Environment", show: "environ"}];
 
 	$scope.toggleBtn = function(showString) {
 		// make the other buttons' bills disappear
@@ -260,7 +269,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	}
 
 	$scope.isValidBill = function(billNumber) {
-		var billRE = /^(HCR|HB|SCR|SB|SJR|HJR)\d+/; // removed $ at end of regex string so sister bills can be added
+		var billRE = /^(HCR|HB|SCR|SB|SJR|HJR|HR|SR)\d+/; // removed $ at end of regex string so sister bills can be added
 		return billRE.test(billNumber);
 	}
 	$scope.isValidLink = function(link) {
