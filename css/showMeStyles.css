@@ -9,11 +9,27 @@ footer {
 a {
 	text-decoration: none;
 }
+.collapse-text-toggle {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #2196F3;
+    cursor: pointer;
+}
+.collapse-text-toggle:hover {
+    text-decoration: underline;
+}
+.collapse-text-toggle:before {
+    content: '\00a0(';
+}
+.collapse-text-toggle:after {
+    content: ')';
+}
 .links {	
 	color: #2196F3;
 }
 .links:hover {
 	text-decoration: underline;
+	cursor: pointer;
 }
 .selected {
 	color:#000!important;
