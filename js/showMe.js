@@ -18,7 +18,7 @@ app.filter('issueFilter', [ function() {
 			regex = /( protected traits?| discriminate| discrimination| discriminatory| human rights)/i;
 			break;
 			case "Women's Rights":
-			regex = /( abortions?| fetus| unborn| fetal remains| pregnancy| family planning| alternative-to-abortion)/i;
+			regex = /( abortions?| fetus| unborn| fetal remains| pregnancy| family planning)/i;
 			break;
 		}
 		angular.forEach(items, function(bill) {
@@ -36,14 +36,19 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 
 	// these filters select bills for display from allBills based on branch of gov
 	$scope.houseFilter = function(element){
-			if (element.branch === "house") {
-				return true;
-			}
+		if (element.branch === "house") {
+			return true;
+		}
 	};
 	$scope.senateFilter = function(element){
-			if (element.branch === "senate") {
-				return true;
-			}
+		if (element.branch === "senate") {
+			return true;
+		}
+	};
+	$scope.govFilter = function(element){
+		if (element.branch === "gov") {
+			return true;
+		}
 	};
 	$scope.replaceUserLegInfo = function(){
   	angular.forEach($scope.allBills, function(item){
@@ -156,7 +161,15 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	{name: "Civil Rights", show: "civil"}, {name: "Gun Control", show: "guns"}, {name: "Women's Rights", show: "women"}];
 
 	$scope.toggleBtn = function(showString) {
-  	$scope[showString] = !$scope[showString];
+		// make the other buttons' bills disappear
+		// for each issue type, if its show value is not equal to showString, set the scope.showValue to false
+		angular.forEach($scope.issueTypes, function(issue){
+			if (issue.show != showString) {
+				$scope[issue.show] = false;
+			}
+		});
+		// make this button's bills either appear or disappear	
+	  	$scope[showString] = !$scope[showString];
   }
 
 	// Don't know if I need to declare this here or not, play around later with it
@@ -172,7 +185,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	// Eventually move these to DB as I did with committees
 	$scope.authors = ["Rep. Joe Adams", "Rep. Lauren Arthur", "Rep. Michael Butler", "Sen. Kiki Curls", 
 	"Rep. Brandon Ellington", "Rep. Bruce Franks Jr.", "Rep. Deb Lavender", "Rep. Tracy McCreery", 
-	"Rep. Sue Meredith", "Rep. Gina Mitten", "Rep. Judy Morgan", "Rep. Jay Mosley", "Rep. Stacey Newman", 
+	"Rep. Sue Meredith", "Rep. Peter Merideth", "Rep. Gina Mitten", "Rep. Judy Morgan", "Rep. Jay Mosley", "Rep. Stacey Newman", 
 	"Rep. Joshua Peters", "Rep. Crystal Quade", "Sen. Jill Schupp", "Rep. Martha Stevens", "Rep. Cora Faith Walker"];
 	//TODO: ADD a custom orderBy/Filter to put authors in the announce forms' select boxes in order of last name
 	// either as a string--split on spaces into array and compare 3rd element or as object.lastname

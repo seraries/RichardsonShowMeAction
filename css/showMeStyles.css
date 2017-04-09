@@ -9,6 +9,12 @@ footer {
 a {
 	text-decoration: none;
 }
+.links {	
+	color: #2196F3;
+}
+.links:hover {
+	text-decoration: underline;
+}
 .selected {
 	color:#000!important;
 	background-color:#ddffdd!important;
