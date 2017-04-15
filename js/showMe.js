@@ -216,6 +216,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 	$scope.criminal = false;
 	$scope.environ = false;
 	$scope.workers = false;
+  
 	// make buttons using this array and use it for issues filtering
 	$scope.issueTypes = [{name: "Education", show: "education"}, {name: "Health Care", show: "health"},  
 	{name: "Civil Rights", show: "civil"}, {name: "Gun Control", show: "guns"}, {name: "Women's Rights", show: "women"}, 
