@@ -30,12 +30,12 @@ if ($result->num_rows > 0) {
     	$row["new"] = false; 
     	// if this has been inserted within 24 hrs (1440 minutes, 86400 seconds), new is true and
     	// updated is false
-   		if(time() - strtotime($row["insertTime"]) < 86400 ) {
+   		if(time() - strtotime($row["insertTime"]) < 10800 ) {
 	    	$row["updated"] = false;
 	    	$row["new"] = true;
 	    	file_put_contents("data.txt", "inside third if", FILE_APPEND);
 			} 
-			elseif (time() - strtotime($row["updateTime"]) < 86400) {
+			elseif (time() - strtotime($row["updateTime"]) < 10800) {
 	    	$row["updated"] = true;
 	    	$row["new"] = false;
 			}

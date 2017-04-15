@@ -14,14 +14,15 @@ if ($result->num_rows > 0) {
     	// add properties updated and new with boolean values
     	$row["updated"] = false;
     	$row["new"] = false; 
-    	// if this has been inserted within 24 hrs (1440 minutes, 86400 seconds), new is true and
+        // Note: I've not changed this time in php files for other dummy site
+    	// if this has been inserted within 37 hrs (since php time is 7hrs ahead of sql time this is 30hrs), new is true and
     	// updated is false
-   		if(time() - strtotime($row["insertTime"]) < 86400 ) {
+   		if(time() - strtotime($row["insertTime"]) < 133200 ) {
 	    	$row["updated"] = false;
 	    	$row["new"] = true;
 	    	file_put_contents("data.txt", "inside third if", FILE_APPEND);
 			} 
-			elseif (time() - strtotime($row["updateTime"]) < 86400) {
+			elseif (time() - strtotime($row["updateTime"]) < 133200) {
 	    	$row["updated"] = true;
 	    	$row["new"] = false;
 			}

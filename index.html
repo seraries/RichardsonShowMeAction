@@ -3,6 +3,7 @@
   <head>
     <title>Show Me State Action!</title>
     <meta charset="utf-8">
+    <meta name="description" content="A resource for finding and acting on state bills.">
     <!--make it responsive on mobile devices-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- import jQuery -->
@@ -35,8 +36,7 @@
 	<body class="w3-margin w3-light-grey" ng-app="showMeApp" ng-cloak ng-controller="showMeCtrl">
     <div id="wrapper" class="w3-margin">
 			<div class="w3-bar w3-red">
-			  <a href="#admin" id="setW1" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" ng-click="showLogin()">Admin</a>
-			  <a href="html/startHere.html" id="setW5" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue">Start Here!</a>
+			  <a href="html/startHere.html" id="setW1" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue">Start Here!</a>
 			  <a href="https://openstates.org/find_your_legislator/" id="setW2" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Find Your Legislators</a>
 			  <a href="http://www.house.mo.gov/" id="setW3" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Go to MO House</a>
 			  <a href="http://www.senate.mo.gov/" id="setW4" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Go to MO Senate</a>
@@ -44,9 +44,8 @@
 			</div>
 
 			<div id="vertNav" ng-show="showVertical" class="w3-bar-block w3-red w3-hide-large w3-hide-medium">
-				<a href="#admin" class="w3-bar-item w3-button w3-hover-light-blue" ng-click="showLogin()">Admin</a>
+				<a href="html/startHere.html" class="w3-bar-item w3-button w3-hover-light-blue">Start Here!</a>
 			  <a href="https://openstates.org/find_your_legislator/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Find Your Legislators</a>
-			  <a href="html/startHere.html" class="w3-bar-item w3-button w3-hover-light-blue">Start Here!</a>
 			  <a href="http://www.house.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Go to MO House</a>
 			  <a href="http://www.senate.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Go to MO Senate</a>
 			</div>
@@ -98,7 +97,8 @@
 
 			<!--buttons for each issue and toggles show/hide bills for issue below-->
 	    <div>
-	    	<div><em>Click buttons below to show or hide bills for each issue.</em></div>
+	    	<p class="w3-center w3-text-red"><span class="actionWhy">Note</span>: When emailing your legislator, include your full address and phone number!</p>
+	    	<div><em>Search bills by issue:</em></div>
 	    	<button ng-repeat="type in issueTypes" ng-click="toggleBtn(type.show)" class="w3-btn w3-round w3-ripple w3-light-blue btn-space" ng-class="{'selected': {{type.show}}}">{{type.name}}</button>	
 	    </div>
 
@@ -152,275 +152,12 @@
 				<header>
 					<h3>Announcements:</h3>
 				</header> 
-				<!-- maybe add date/timestamp to announce object and filter by most recent (Done in Mysql-->
+				<!-- date/timestamp in announce object used to filter by most recent (Done in db)-->
 				<div class="w3-panel w3-white w3-leftbar w3-round-xlarge" ng-repeat="each in announce">
 						<h4><strong> {{ each.title }} </strong></h4>
-						<p class="announce">{{ each.message }}</p>
+						<p class="announce">{{ each.message }} <a ng-href="{{each.link}}" class="links" target="_blank" rel="noopener" ng-show="each.link">{{each.link}}</a></p>
 						<p><span class="actionWhy">From</span>: {{ each.author }}</p>
 				</div>
-			</section>
-
-			<section ng-show="loginVisible && !isValidLogin" class="w3-container">
-				<header>
-					<h3 id="login">Admin Login</h3>
-				</header>
-				<form name="loginForm" novalidate>
-				<p>
-					<label>Username: </label>
-					<input type="text" name="user" ng-model="loginInfo.username" required>
-				</p>
-				<p>	
-					<label>Password: </label>
-					<input type="password" name="pword" ng-model="loginInfo.password" required>
-				</p>
-				<p>
-					<button class="w3-btn w3-round w3-blue-grey w3-ripple" ng-disabled="loginForm.$invalid" ng-click="loginSubmit()">Login</button>
-					<span class="error" ng-show="showFailedLogin">Incorrect Username or Password</span>
-				</p>
-				</form>
-			</section>
-
-			<section ng-show="isValidLogin" class="w3-container">
-				<header>
-					<h3>Admin Tools:</h3>
-				</header>
-				<button class="w3-btn w3-round w3-ripple w3-blue-grey w3-margin" ng-click="insertModal=!insertModal">Add a Bill</button>
-				<div ng-show="isValidLogin" class="w3-modal hidden" ng-class="{'shown': insertModal, 'hidden': !insertModal}">
-					<div class="w3-modal-content w3-card-2 w3-padding-large w3-animate-zoom">
-						<header>
-							<h3 class="formHeading w3-center w3-text-blue-grey">Add a Bill</h3>
-							<span ng-click="insertModal=!insertModal" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
-							<span class="w3-text-blue-grey w3-medium"><em> All Fields Required</em></span>
-						</header>
-						<form name="insertForm" novalidate>
-							<p>
-								<label for="branch">Bill Currently In: </label>
-							</p>
-						  <p>
-							  <input class="w3-radio" type="radio" name="branch" ng-model="billDetails.branch" value="senate" required>
-							  <label class="w3-validate">Senate</label>
-							  <input class="w3-radio" type="radio" name="branch" ng-model="billDetails.branch" value="house" required>
-							  <label class="w3-validate">House</label>
-							  <input class="w3-radio" type="radio" name="branch" ng-model="billDetails.branch" value="gov" required>
-							  <label class="w3-validate">Governor</label>
-							  <input class="w3-radio" type="radio" name="branch" ng-model="billDetails.branch" value="inactive" required>
-							  <label class="w3-validate">Inactive&ast;</label>
-							  <p class="smallPrint">&ast;Select to save the bill to the database, but not show it on the webpage. Can add it to the webpage later using the Edit form and selecting House or Senate.</p>
-							</p>
-							<span class="error" ng-show="billDupeError">This bill number already exists. Use the Edit Bill form to see it&apos;s info, modify it, and/or make it active again.</span>
-							<p> 
-								<label for="insertBill">Bill to insert: </label>
-								<input type="text" name="insertBill" ng-model="billDetails.id" placeholder="e.g. SB28 or SB28/HB290" ng-blur="checkDupe()" required > <span class="error" ng-show="insertForm.insertBill.$touched && !isValidBill(billDetails.id)">Bills must begin with HCR, HB, SB, or SCR and have no space between prefix and digits, e.g., SB28</span>
-							</p>
-							<p>
-								<label for="insertLink">Link to Bill: </label>
-								<input type="text" id="insertLink" name="insertLink" ng-model="billDetails.link" placeholder="e.g. http://www.senate.mo.gov/17info/BTS_Web/Bill.aspx?SessionType=R&BillID=57095378" required>
-								<span class="error" ng-show="insertForm.insertLink.$touched && !isValidLink(billDetails.link)">Links to bills must begin with http:&#x2F;&#x2F;www.house.mo.gov or http:&#x2F;&#x2F;www.senate.mo.gov</span>
-							</p>
-							<p>
-								<label for="vote">Ask Legislators to Take What Position on this Bill: </label>
-							</p>
-							<p>
-							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Support" required>
-							  <label class="w3-validate">Support</label>
-							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Oppose" required>
-							  <label class="w3-validate">Oppose</label>
-							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Veto" required>
-							  <label class="w3-validate">Veto</label>
-							  <input class="w3-radio" type="radio" name="vote" ng-model="billDetails.vote" value="Approve" required>
-							  <label class="w3-validate">Approve</label>
-							</p>
-							<p>
-								<label for="whyItMatters" class="whyVote">Summary and Why We Should Advocate For/Against this Bill:</label>
-								<textarea maxlength="980" name="whyItMatters" ng-model="billDetails.why" placeholder="Brief summary of bill and talking points for activists to use when calling legislators. About 150 words max." required></textarea>
-							</p>
-							<p>
-								<label for="contact">Who Should We Contact About this Bill? <span class="error" ng-show="insertForm.contact.$touched && insertForm.contact.$invalid">Select a Contact</span></label>
-								<select class="w3-select w3-border" ng-model="contact" name="contact" ng-options="x.title for x in contacts | orderBy:contactFilter" required>
-								<option value="">Required: Select One</option>
-			  				</select>
-							</p>
-							<p>
-								<button class="w3-btn w3-round w3-ripple w3-blue-grey" ng-disabled="insertForm.$invalid || !isValidBill(billDetails.id) || !isValidLink(billDetails.link) || billDupeError" ng-click="insertSubmit()">Add Bill</button>
-							</p>
-						</form>
-					</div>
-				</div>
-
-				<button class="w3-btn w3-round w3-ripple w3-blue-grey w3-margin" ng-click="editModal=!editModal">Edit a Bill</button>
-				<div ng-show="isValidLogin" class="w3-modal hidden" ng-class="{'shown': editModal, 'hidden': !editModal}">
-					<div class="w3-modal-content w3-card-2 w3-padding-large w3-animate-zoom">
-						<header>
-							<h3 class="formHeading w3-center w3-text-blue-grey">Edit a Bill</h3>
-							<span ng-click="editModal=!editModal" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
-							<span class="w3-text-blue-grey w3-medium"><em> All Fields Required</em></span>
-						</header>
-						<form name="editForm" novalidate>
-						<p>
-							<label for="editBill">Bill to edit: </label>
-							<select class="w3-select w3-border" name="editBill" ng-model="editDetails.id" ng-options="bill.billNum for bill in allBills | orderBy: 'billNum'" required>
-							<option value="">Required: Select One</option>
-							</select>
-						</p>
-						<p>
-							<button class="w3-btn w3-round w3-ripple w3-blue-grey" ng-disabled="editForm.editBill.$invalid" ng-click="findBill()">Get Bill Info</button>
-						</p>
-						<p>
-							<label for="editLink">Link to Bill: </label>
-							<input type="text" id="editLink" name="editLink" ng-model="editDetails.link" placeholder="e.g. http://www.senate.mo.gov/17info/BTS_Web/Bill.aspx?SessionType=R&BillID=57095378" required>
-							<span class="error" ng-show="editForm.editLink.$touched && !isValidLink(editDetails.link)">Links to bills must begin with http:&#x2F;&#x2F;www.house.mo.gov or http:&#x2F;&#x2F;www.senate.mo.gov</span>
-						</p>
-						<p>
-							<label for="editBranch">Bill Currently In: </label>
-						</p>
-						<p>
-						  <input class="w3-radio" type="radio" name="editBranch" ng-model="editDetails.branch" value="senate" required>
-						  <label class="w3-validate">Senate</label>
-						  <input class="w3-radio" type="radio" name="editBranch" ng-model="editDetails.branch" value="house" required>
-						  <label class="w3-validate">House</label>
-						  <input class="w3-radio" type="radio" name="editBranch" ng-model="editDetails.branch" value="gov" required>
-							<label class="w3-validate">Governor</label>
-						  <input class="w3-radio" type="radio" name="editBranch" ng-model="editDetails.branch" value="inactive" required>
-						  <label class="w3-validate">Inactive&ast;</label>
-						  <p class="smallPrint">&ast;Removes bill from webpage but doesn&apos;t delete it, in case it becomes actionable again.</p>
-						</p>
-						<p>
-							<label for="editVote">Ask Legislators to Take What Position on this Bill: </label>
-						</p>
-						<p>
-						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Support" required>
-						  <label class="w3-validate">Support</label>
-						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Oppose" required>
-						  <label class="w3-validate">Oppose</label>
-						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Veto" required>
-						  <label class="w3-validate">Veto</label>
-						  <input class="w3-radio" type="radio" name="vote" ng-model="editDetails.vote" value="Approve" required>
-						  <label class="w3-validate">Approve</label>
-						</p>
-						<p>
-							<label for="editWhy" class="whyVote">Summary and Why We Should Advocate For/Against this Bill:</label>
-							<textarea maxlength="980" name="editWhy" ng-model="editDetails.why" placeholder="Brief summary of bill and talking points for activists to use when calling legislators. About 150 words max." required></textarea>
-						</p>
-						<p>
-							<label for="editWho">Who Should We Contact About this Bill? <span class="error" ng-show="editForm.editWho.$touched && editForm.editWho.$invalid">Select a Contact</span></label>
-							<select class="w3-select w3-border" ng-model="editDetails.who" name="editWho" ng-options="x.title for x in contacts | orderBy:contactFilter" required>
-							<option value="">Required: Select One</option>
-		  				</select>
-						</p>
-						<p>
-							<button class="w3-btn w3-round w3-ripple w3-blue-grey" ng-disabled="editForm.$invalid || !isValidLink(editDetails.link)" ng-click="editSubmit()">Update Bill</button>
-						</p>
-						</form>
-					</div>
-				</div>
-
-				<button class="w3-btn w3-round w3-ripple w3-blue-grey w3-margin" ng-click="deleteModal=!deleteModal">Delete a Bill</button>
-				<div ng-show="isValidLogin" class="w3-modal hidden" ng-class="{'shown': deleteModal, 'hidden': !deleteModal}">
-					<div class="w3-modal-content w3-card-2 w3-padding-large w3-animate-zoom">
-						<header>
-							<h3 class="formHeading w3-center w3-text-blue-grey">Delete a Bill</h3>
-							<span ng-click="deleteModal=!deleteModal" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
-						</header>
-						<form name="deleteForm" novalidate>
-							<p class="smallPrint">This permanently deletes a bill from the database. If you want to temporarilty remove it from the webpage, use the Edit form instead and select <strong>Inactive</strong>.</p>
-							<p>
-							<label for="deleteBill">Bill to remove: </label>
-							<select class="w3-select w3-border" name="deleteBill" ng-model="billToDelete" ng-options="bill.billNum for bill in allBills | orderBy: 'billNum'" required> 
-							<option value="">Required: Select One</option>
-							</select>
-							</p>
-							<p>
-							<button class="w3-btn w3-round w3-blue-grey w3-ripple" ng-disabled="deleteForm.$invalid" ng-click="deleteSubmit()">Delete Bill</button>
-							</p>
-						</form>
-					</div>
-				</div>
-
-								<button class="w3-btn w3-round w3-ripple w3-blue-grey w3-margin" ng-click="addAnnounceModal=!addAnnounceModal">Add Announcement</button>
-				<div ng-show="isValidLogin" class="w3-modal hidden" ng-class="{'shown': addAnnounceModal, 'hidden': !addAnnounceModal}">
-					<div class="w3-modal-content w3-card-2 w3-padding-large w3-animate-zoom">
-						<header>
-							<h3 class="formHeading w3-center w3-text-blue-grey">Add an Announcement</h3>
-							<span ng-click="addAnnounceModal=!addAnnounceModal" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
-							<span class="w3-text-blue-grey w3-medium"><em> All Fields Required</em></span>
-						</header>
-						<form name="addAnnounceForm" novalidate>
-							<p>
-							<label for="addAnnounceTitle">Title for Announcement: </label>
-							<input type="text" name="addAnnounceTitle" ng-model="addAnnounce.title" placeholder="e.g., #GOV101 Coming Soon!" required>
-							</p>
-							<p>
-							<label for="addAnnounceMessage">Announcement: </label>
-							<textarea maxlength="580" name="addAnnounceMessage" ng-model="addAnnounce.message" placeholder="About 80 words or less, please and thank you!" required></textarea>
-							</p>
-							<p>
-								<label for="addAnnounceAuthor">Author: </label>
-								<select class="w3-select w3-border" ng-model="addAnnounce.author" name="addAnnounceAuthor" ng-options=" z for z in authors" required>
-							<option value="">Required: Select One</option>
-		  				</select>
-							</p>
-							<p>
-							<button class="w3-btn w3-round w3-blue-grey w3-ripple" ng-disabled="addAnnounceForm.$invalid" ng-click="addAnnounceSubmit()">Add Announcement</button>
-							</p>
-						</form>
-					</div>
-				</div>
-
-				<button class="w3-btn w3-round w3-ripple w3-blue-grey w3-margin" ng-click="editAnnounceModal=!editAnnounceModal">Edit Announcement</button>
-				<div ng-show="isValidLogin" class="w3-modal hidden" ng-class="{'shown': editAnnounceModal, 'hidden': !editAnnounceModal}">
-					<div class="w3-modal-content w3-card-2 w3-padding-large w3-animate-zoom">
-						<header>
-							<h3 class="formHeading w3-center w3-text-blue-grey">Edit an Announcement</h3>
-							<span ng-click="editAnnounceModal=!editAnnounceModal" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
-						</header>
-						<form name="editAnnounceForm" novalidate>
-							<p>
-							<label for="editAnnounceTitle">Title of Announcement: </label>
-							<select class="w3-select w3-border"  name="editAnnounceTitle" ng-model="editAnnounce.title" ng-options=" y.title for y in announce" required>
-							<option value="">Required: Select One</option>
-							</select>
-							</p>
-							<p>
-							<button class="w3-btn w3-round w3-ripple w3-blue-grey" ng-disabled="editAnnounceForm.editAnnounceTitle.$invalid" ng-click="findAnnounce()">Find Announcement</button>
-							</p>
-							<p>
-							<label for="editAnnounceMessage">Announcement: </label>
-							<textarea maxlength="580" name="editAnnounceMessage" ng-model="editAnnounce.message" placeholder="About 80 words or less, please and thank you!" required></textarea>
-							</p>
-							<p>
-								<label for="editAnnounceAuthor">Author: </label>
-								<select class="w3-select w3-border" ng-model="editAnnounce.author" name="editAnnounceAuthor" ng-options=" z for z in authors" required>
-							<option value="">Required: Select One</option>
-		  				</select>
-							</p>
-							<p>
-							<button class="w3-btn w3-round w3-blue-grey w3-ripple" ng-disabled="editAnnounceForm.$invalid" ng-click="editAnnounceSubmit()">Edit Announcement</button>
-							</p>
-						</form>
-					</div>
-				</div>
-
-				<button class="w3-btn w3-round w3-ripple w3-blue-grey w3-margin" ng-click="deleteAnnounceModal=!deleteAnnounceModal">Delete Announcement</button>
-				<div ng-show="isValidLogin" class="w3-modal hidden" ng-class="{'shown': deleteAnnounceModal, 'hidden': !deleteAnnounceModal}">
-					<div class="w3-modal-content w3-card-2 w3-padding-large w3-animate-zoom">
-						<header>
-							<h3 class="formHeading w3-center w3-text-blue-grey">Delete an Announcement</h3>
-							<span ng-click="deleteAnnounceModal=!deleteAnnounceModal" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
-						</header>
-						<form name="deleteAnnounceForm" novalidate>
-							<p>
-							<label for="deleteAnnounceTitle">Title of Announcement: </label>
-							<select class="w3-select w3-border"  name="deleteAnnounceTitle" ng-model="deleteTitle" ng-options=" y.title for y in announce" required>
-							<option value="">Required: Select One</option>
-							</select>
-							</p>
-							<p>
-							<button class="w3-btn w3-round w3-blue-grey w3-ripple" ng-disabled="deleteAnnounceForm.$invalid" ng-click="deleteAnnounceSubmit()">Delete Announcement</button>
-							</p>
-						</form>
-					</div>
-				</div>
-
 			</section>
 
 		</div> <!--end of wrapper div that enables sticky footer. All content but footer should be in it. -->

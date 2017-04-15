@@ -36,20 +36,18 @@ a {
 	background-color:#ddffdd!important;
 }
 #setW1 {
-	width: 20%;
+	width: 25%;
 }
 #setW2 {
-	width: 20%;
+	width: 25%;
 }
 #setW3 {
-	width: 20%;
+	width: 25%;
 }
 #setW4 {
-	width: 20%;
+	width: 25%;
 }
-#setW5 {
-	width: 20%;
-}
+
 /* break long strings--like link addresses--up in the announcement div for small screen/mobile display */
 .announce {
 	word-wrap: break-word;

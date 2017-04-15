@@ -36,7 +36,6 @@
 		<div id="wrapper" class="w3-margin">
 			<div class="w3-bar w3-red">
 			  <a href="http://showmestateaction.com" id="setW1" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue">Home</a>
-			  <a href="" id="setW5" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue">Start Here!</a>
 			  <a href="https://openstates.org/find_your_legislator/" id="setW2" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Find Your Legislators</a>
 			  <a href="http://www.house.mo.gov/" id="setW3" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Go to MO House</a>
 			  <a href="http://www.senate.mo.gov/" id="setW4" class="w3-bar-item w3-button w3-hide-small w3-hover-light-blue" target="_blank" rel="noopener">Go to MO Senate</a>
@@ -46,7 +45,6 @@
 			<div id="vertNav" ng-show="showVertical" class="w3-bar-block w3-red w3-hide-large w3-hide-medium">
 				<a href="http://showmestateaction.com" class="w3-bar-item w3-button w3-hover-light-blue">Home</a>
 			  <a href="https://openstates.org/find_your_legislator/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Find Your Legislators</a>
-			  <a href="" class="w3-bar-item w3-button w3-hover-light-blue">Start Here!</a>
 			  <a href="http://www.house.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Go to MO House</a>
 			  <a href="http://www.senate.mo.gov/" class="w3-bar-item w3-button w3-hover-light-blue" target="_blank" rel="noopener">Go to MO Senate</a>
 			</div>
@@ -86,30 +84,10 @@
 					<video controls src="../video/contactLeg.mp4"></video>
 				</div>
 			</section>
-
-			<section class="w3-container w3-white w3-margin-bottom">
-				<header>
-					<h3 class="w3-center"><strong>Video Guide For Admin</strong></h3>
-				</header>
-				<form ng-hide="isValidLogin" name="loginForm" novalidate>
-					<p>
-						<label>Username: </label>
-						<input type="text" name="user" ng-model="loginInfo.username" required>
-					</p>
-					<p>	
-						<label>Password: </label>
-						<input type="password" name="pword" ng-model="loginInfo.password" required>
-					</p>
-					<p>
-						<button class="w3-btn w3-round w3-blue-grey w3-ripple" ng-disabled="loginForm.$invalid" ng-click="loginSubmit()">Login</button>
-						<span class="error" ng-show="showFailedLogin">Incorrect Username or Password</span>
-					</p>
-				</form>
-				<div ng-show="isValidLogin">
-					<video controls src="../video/forLeg.mp4"></video>
-				</div>
-			</section>
 		</div>
+		<footer id="admin" class="w3-container w3-center w3-small">
+			<p>This is not an official site for the Missouri State Legislature. Problems? Contact webmaster: <a href="mailto:sarah@richardsonprogramming.com?Subject=About%20Your%20State%20Website" class="w3-hover-text-green">Sarah Richardson</a></p>
+		</footer>
 
 	</body>
 </html>
