@@ -111,6 +111,21 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
 			return true;
 		}
 	};
+  $scope.houseLength = 3;
+  $scope.senateLength = 3;
+  $scope.incrementHouse = function() {
+    $scope.houseLength += 6;
+  };
+  $scope.resetHouse = function() {
+    $scope.houseLength = 2;
+  };
+  $scope.incrementSenate = function() {
+    $scope.senateLength += 6;
+  };
+  $scope.resetSenate = function() {
+    $scope.senateLength = 2;
+  };
+
 	$scope.replaceUserLegInfo = function(){
   	angular.forEach($scope.allBills, function(item){
   		// if they've reset their leg info (removed it from local storage)
@@ -159,12 +174,19 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
   // putting this here displays bill data on page open but doesn't dynamically update it
   $http.get("../php/getBills.php").then(function(response) {
     $scope.allBills = response.data;
-    // for users--not admin, whose reloads with form submits will negate this--this changes
-    // the links for Your Senator and Your Representative to mailto: hrefs
-    // is this call a duplicate of js85-90
+    // this changes the links for Your Senator and Your Representative to mailto: hrefs
+    // is this call necessary or does it duplicate code above?
     if(!$scope.noContacts){
-    	$scope.replaceUserLegInfo();
+      $scope.replaceUserLegInfo();
     }
+    // make the numeric sort of these bills accurate (after first sorting by type of bill, e.g., HB, HJR, etc., sort by number)
+    angular.forEach($scope.allBills, function(bill){
+      var billPrefixArray = bill.billNum.match(/HB|SB|HR|SR|HCR|HJR|SCR|SJR|SCB|HCB/); // get prefix as array
+      // Set the prefix (alphabetic) part of the bill number as property of the bill
+      bill.prefix = billPrefixArray[0]; // get prefix string from the array
+      // get only the number part of the bill number and set as property of the bill
+      bill.numberOnly = parseInt(bill.billNum.substring(bill.prefix.length)); // must make this a number to work right!     
+    });
   });
 
   // Note: counting on always putting link at end of message string in announcements

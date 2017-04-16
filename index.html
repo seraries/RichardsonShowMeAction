@@ -107,7 +107,7 @@
 	    	<header class="w3-center">
 	    		<h3><strong>{{type.name}}</strong></h3>
 	    	</header>
-	    	<div class="w3-card w3-margin-bottom w3-pale-green w3-padding" ng-repeat="each in filteredBills = (allBills | issueFilter:type.name) | orderBy: 'billNum'">
+	    	<div class="w3-card w3-margin-bottom w3-pale-green w3-padding" ng-repeat="each in filteredBills = (allBills | issueFilter:type.name) | orderBy: ['prefix', 'numberOnly']">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
 	    		<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 	    		<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
@@ -116,24 +116,32 @@
 	    </section>
 
 			<section class="w3-container">
-				<header>
+				<header id="house">
 					<h3>Bills Currently in the House</h3>
 				</header> 
-				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: houseFilter | orderBy: 'billNum'">
+				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: houseFilter | orderBy: ['prefix', 'numberOnly'] | limitTo: houseLength">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
 						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
+				<div class="w3-container">
+					<div><a href="#house" class="links fewer" ng-click="resetHouse()" ng-show="houseLength > 3">Fewer bills</a></div>
+					<div><a href="" class="links more" ng-click="incrementHouse()">More bills</a></div>
+				</div>
 			</section>
 
 			<section class="w3-container">
-				<header>
+				<header id="senate">
 					<h3>Bills Currently in the Senate</h3>
 				</header>
-				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: senateFilter | orderBy: 'billNum'">
+				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: senateFilter | orderBy: ['prefix', 'numberOnly'] | limitTo: senateLength">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
 						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
+				</div>
+				<div class="w3-container">
+					<div><a href="#senate" class="links fewer" ng-click="resetSenate()" ng-show="senateLength > 3">Fewer bills</a></div>
+					<div><a href="" class="links more" ng-click="incrementSenate()">More bills</a></div>
 				</div>
 			</section>
 
@@ -141,7 +149,7 @@
 				<header>
 					<h3>Bills on the Governor&apos;s Desk</h3>
 				</header> 
-				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: govFilter | orderBy: 'billNum'">
+				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: govFilter | orderBy: ['prefix', 'numberOnly']">
 						<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
 						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>

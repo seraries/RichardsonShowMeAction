@@ -9,6 +9,12 @@ footer {
 a {
 	text-decoration: none;
 }
+.fewer {
+	float: left;
+}
+.more {
+	float: right;
+}
 .collapse-text-toggle {
     font-size: 0.9em;
     font-style: italic;
