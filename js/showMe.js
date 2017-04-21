@@ -18,7 +18,7 @@ app.filter('issueFilter', [ function() {
 			regex = /( protected traits?| discriminat| human right| civil right)/i;
 			break;
 			case "Women's Rights":
-			regex = /( abortions?| fetus| unborn| fetal remains| pregnancy| Planned Parenthood| woman| family planning| based on gender)/i;
+			regex = /( abortions?| fetus| unborn| fetal remains| pregnancy| Planned Parenthood| woman| women| family planning| based on gender)/i;
 			break;
 			case "Criminal Justice":
 			regex = /( criminals?| jails?| youth violence| crimes?| parole| imprison| acts of violence| drug courts?| child abuse| prosecution| law enforcement)/i;
@@ -73,7 +73,7 @@ app.directive('ddTextCollapse', ['$compile', function($compile) {
                     var secondSpan = $compile('<span ng-if="collapsed">' + secondPart + '</span>')(scope);
                     var moreIndicatorSpan = $compile('<span ng-if="!collapsed">... </span>')(scope);
                     //var lineBreak = $compile('<br ng-if="collapsed">')(scope);
-                    var toggleButton = $compile('<span class="collapse-text-toggle" ng-click="toggle()">{{collapsed ? "less" : "more"}}</span>')(scope);
+                    var toggleButton = $compile('<a href="" class="collapse-text-toggle" ng-click="toggle()">{{collapsed ? "less" : "more"}}</a>')(scope);
 
                     // remove the current contents of the element
                     // and add the new ones we created
@@ -189,6 +189,72 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
     });
   });
 
+    // get users email from local storage and bills Followed info from database
+  // caused HOURS OF HEADACHES because I forgot to json parse this email string, therefore couldn't insert in db
+  $scope.email = $window.localStorage.getItem("email");
+  //initialize empty array of billsFollowed in case they sign up for emails and thus need this array
+  $scope.billsFollowed = [];
+
+  if($scope.email === null){
+    $scope.noEmail = true;
+  }
+  else {
+    // this time, I'll remember to PARSE THIS!!!
+    $scope.email = JSON.parse($scope.email);
+    
+    $http.post("../php/getBillsFollowed.php", $scope.email).then(function(response) {
+      // check if this is empty string--only do split if it is not empty!
+      if (!(response.data[0] === "") || !(response.data[0] === null)) {
+        var usersBills = response.data[0].billsFollowed; // usersBills should be comma separated string of bill numbers
+        $scope.billsFollowed = usersBills.split(","); // split this string into an array of bill numbers
+      }
+    });
+  }
+
+  $scope.followBill = function(billNumber) {
+    // check that bill's not already in there first
+    var billNumIndex = $scope.billsFollowed.indexOf(billNumber);
+    if (!(billNumIndex > -1)) {
+      $scope.billsFollowed.push(billNumber);
+      // object to send data to php
+      var billFollowInfo = {};
+      billFollowInfo.email = $scope.email;
+      billFollowInfo.billNumbers = $scope.billsFollowed.join(); // join array elements into comma separated string
+      // update database
+      $http.post("../php/addOrRemoveBillToFollow.php", billFollowInfo).then(function(response){
+      });
+    }
+  };
+
+  $scope.unfollowBill = function(billNumber) {
+      var billNumIndex = $scope.billsFollowed.indexOf(billNumber);
+      if (billNumIndex > -1) {
+        $scope.billsFollowed.splice(billNumIndex, 1); // remove this bill number from array
+        var billFollowInfo = {};
+        billFollowInfo.email = $scope.email;
+        billFollowInfo.billNumbers = $scope.billsFollowed.join();
+        $http.post("../php/addOrRemoveBillToFollow.php", billFollowInfo).then(function(response){
+
+        });
+      }
+  };
+
+  $scope.addEmail = function() {
+    $window.localStorage.setItem("email", JSON.stringify($scope.newEmail));
+    $http.post("../php/addActivist.php", $scope.newEmail).then(function(response) {
+      $scope.noEmail = false;
+    }); 
+    $scope.email = $scope.newEmail;
+    // In case they are already in database (from signing up on different device), get their bills followed
+    $http.post("../php/getBillsFollowed.php", $scope.email).then(function(response) {
+      // check if this is empty string--only do split if it is not empty!
+      if (!(response.data[0] === "") || !(response.data[0] === null)) {
+        var usersBills = response.data[0].billsFollowed; // usersBills should be comma separated string of bill numbers
+        $scope.billsFollowed = usersBills.split(","); // split this string into an array of bill numbers
+      }
+    });
+  };
+
   // Note: counting on always putting link at end of message string in announcements
   // later I can amend this to search for the index of the next space following the index of http (or the end of the string) and
   // that will be the end of the link and I can put that index as the end argument of substring()
@@ -229,6 +295,7 @@ app.controller('showMeCtrl', ['$scope', '$window', '$http', function($scope, $wi
   $scope.showRemoveWarning = false;
 	$scope.showVertical = false; // use for responsive navbar
 	$scope.addLegModal = false;
+  $scope.addEmailModal = false;
 
 	$scope.guns = false;
 	$scope.education = false;

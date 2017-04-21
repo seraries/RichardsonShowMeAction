@@ -10,10 +10,10 @@ a {
 	text-decoration: none;
 }
 .fewer {
-	float: left;
+	float: right;
 }
 .more {
-	float: right;
+	float: left;
 }
 .collapse-text-toggle {
     font-size: 0.9em;

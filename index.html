@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
 		<link rel="stylesheet" href="css/showMeStyles.css">
 		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-	<script>
+		<script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -75,18 +75,18 @@
 						<form name="addLegForm" novalidate>
 							<p>
 								<label for="newSenNum">Your Senator&apos;s phone number: </label>
-	    					<input type="text" name="newSenNum" ng-model="senator.number" required>
+	    					<input type="tel" name="newSenNum" ng-model="senator.number" required>
 							</p>
 							<p> 
 								<label for="newSenEmail">Your Senator&apos;s email: </label>
-	    					<input type="text" name="newSenEmail" ng-model="senator.email" required>
+	    					<input type="email" name="newSenEmail" ng-model="senator.email" required>
 							</p>
 							<p>
 						    <label for="newRepNum">Your Representative&apos;s phone number: </label>
-						    <input type="text" name="newRepNum" ng-model="rep.number" required>
+						    <input type="tel" name="newRepNum" ng-model="rep.number" required>
 							</p>
 						    <label for="newRepEmail">Your Representative&apos;s email: </label>
-						    <input type="text" name="newRepEmail" ng-model="rep.email" required>
+						    <input type="email" name="newRepEmail" ng-model="rep.email" required>
 							<p>
 								<button class="w3-btn w3-round w3-ripple w3-blue-grey" ng-disabled="addLegForm.$invalid" ng-click="addLeg()">Save</button>
 							</p>
@@ -95,9 +95,33 @@
 				</div>
 			</section>
 
+			<p class="w3-center w3-text-red"><span class="actionWhy">Tip</span>: When emailing your legislator, include your full address and phone number.</p>
+
+			<section ng-show="noEmail">
+				<div class="w3-center">New Feature!!</div>
+	    	<p class="w3-center"><button class="w3-button w3-round-xlarge w3-green w3-ripple" ng-click="addEmailModal = !addEmailModal">Get Bill Alerts!</button></p>
+	    	<div class="w3-modal hidden" ng-class="{'shown': addEmailModal, 'hidden': !addEmailModal}">
+					<div class="w3-modal-content w3-card-2 w3-padding-large w3-animate-zoom">
+						<header>
+							<h3 class="formHeading w3-center w3-text-blue-grey">Get email updates on bills you want to track</h3>
+							<span ng-click="addEmailModal=!addEmailModal" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
+							<span class="w3-text-blue-grey w3-medium"><em>Your email will ONLY be used to send bill update alerts</em></span>
+						</header>
+						<form name="addEmailForm" novalidate>
+							<p>
+								<label for="newEmail">Your email address: </label>
+	    					<input type="email" name="newEmail" ng-model="newEmail" required>
+							</p>
+							<p>Once you submit, you will be able to select which bills on the site you want to follow and get updates on.</p>
+								<button class="w3-btn w3-round w3-ripple w3-blue-grey" ng-disabled="addEmailForm.$invalid" ng-click="addEmail()">Get Alerts!</button>
+							</p>
+						</form>
+					</div>
+				</div>
+			</section>
+
 			<!--buttons for each issue and toggles show/hide bills for issue below-->
 	    <div>
-	    	<p class="w3-center w3-text-red"><span class="actionWhy">Note</span>: When emailing your legislator, include your full address and phone number!</p>
 	    	<div><em>Search bills by issue:</em></div>
 	    	<button ng-repeat="type in issueTypes" ng-click="toggleBtn(type.show)" class="w3-btn w3-round w3-ripple w3-light-blue btn-space" ng-class="{'selected': {{type.show}}}">{{type.name}}</button>	
 	    </div>
@@ -109,6 +133,8 @@
 	    	</header>
 	    	<div class="w3-card w3-margin-bottom w3-pale-green w3-padding" ng-repeat="each in filteredBills = (allBills | issueFilter:type.name) | orderBy: ['prefix', 'numberOnly']">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
+					<button class="w3-btn w3-ripple" ng-show="!noEmail && !(billsFollowed.indexOf(each.billNum) > -1)" ng-click=followBill(each.billNum)>Follow Bill</button>
+					<button class="w3-btn w3-ripple w3-grey" ng-show="!noEmail && (billsFollowed.indexOf(each.billNum) > -1)" ng-click=unfollowBill(each.billNum)>Unfollow Bill</button>
 	    		<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 	    		<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 	    	</div> 	
@@ -121,8 +147,10 @@
 				</header> 
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: houseFilter | orderBy: ['prefix', 'numberOnly'] | limitTo: houseLength">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
-						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
+					<button class="w3-btn w3-ripple" ng-show="!noEmail && !(billsFollowed.indexOf(each.billNum) > -1)" ng-click=followBill(each.billNum)>Follow Bill</button>
+					<button class="w3-btn w3-ripple w3-grey" ng-show="!noEmail && (billsFollowed.indexOf(each.billNum) > -1)" ng-click=unfollowBill(each.billNum)>Unfollow Bill</button>
+					<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
+					<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
 				<div class="w3-container">
 					<div><a href="#house" class="links fewer" ng-click="resetHouse()" ng-show="houseLength > 3">Fewer bills</a></div>
@@ -136,8 +164,10 @@
 				</header>
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: senateFilter | orderBy: ['prefix', 'numberOnly'] | limitTo: senateLength">
 					<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
-						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
+					<button class="w3-btn w3-ripple" ng-show="!noEmail && !(billsFollowed.indexOf(each.billNum) > -1)" ng-click=followBill(each.billNum)>Follow Bill</button>
+					<button class="w3-btn w3-ripple w3-grey" ng-show="!noEmail && (billsFollowed.indexOf(each.billNum) > -1)" ng-click=unfollowBill(each.billNum)>Unfollow Bill</button>
+					<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
+					<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
 				<div class="w3-container">
 					<div><a href="#senate" class="links fewer" ng-click="resetSenate()" ng-show="senateLength > 3">Fewer bills</a></div>
@@ -151,6 +181,8 @@
 				</header> 
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: govFilter | orderBy: ['prefix', 'numberOnly']">
 						<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
+						<button class="w3-btn w3-ripple" ng-show="!noEmail && !(billsFollowed.indexOf(each.billNum) > -1)" ng-click=followBill(each.billNum)>Follow Bill</button>
+						<button class="w3-btn w3-ripple w3-grey" ng-show="!noEmail && (billsFollowed.indexOf(each.billNum) > -1)" ng-click=unfollowBill(each.billNum)>Unfollow Bill</button>
 						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
