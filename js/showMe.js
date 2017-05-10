@@ -24,7 +24,7 @@ app.filter('issueFilter', [ function() {
 			regex = /( criminals?| jails?| youth violence| crimes?| parole| imprison| acts of violence| drug courts?| child abuse| prosecution| law enforcement)/i;
 			break;
 			case "Environment":
-			regex = /( toxic waste| environmental| pollution| clean energy| solar)/i;
+			regex = /( toxic waste| environment| pollution| clean energy| solar)/i;
 			break;
 			case "Workers' Rights":
 			regex = /( labor unions?| unemployment| living wage| workers| by their employers)/i;

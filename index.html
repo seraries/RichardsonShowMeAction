@@ -112,7 +112,7 @@
 								<label for="newEmail">Your email address: </label>
 	    					<input type="email" name="newEmail" ng-model="newEmail" required>
 							</p>
-							<p>Once you submit, you will be able to select which bills on the site you want to follow and get updates on.</p>
+							<p>After submitting, click the <button class="w3-btn">Follow Bill</button> button next to each bill number you want email updates on.</p>
 								<button class="w3-btn w3-round w3-ripple w3-blue-grey" ng-disabled="addEmailForm.$invalid" ng-click="addEmail()">Get Alerts!</button>
 							</p>
 						</form>
@@ -183,7 +183,7 @@
 						<h4><a ng-href="{{each.billLink}}" class="links w3-margin-right" target="_blank" rel="noopener"><strong>{{ each.billNum }}</strong></a><span class="w3-tag w3-green w3-round-large w3-margin-left" ng-show="each.updated">Updated!</span><span class="w3-tag w3-round-large w3-red w3-margin-left" ng-show="each.new">New!</span></h4>
 						<button class="w3-btn w3-ripple" ng-show="!noEmail && !(billsFollowed.indexOf(each.billNum) > -1)" ng-click=followBill(each.billNum)>Follow Bill</button>
 						<button class="w3-btn w3-ripple w3-grey" ng-show="!noEmail && (billsFollowed.indexOf(each.billNum) > -1)" ng-click=unfollowBill(each.billNum)>Unfollow Bill</button>
-						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill.<a ng-href="tel:{{each.phone}}" class="links" ng-hide="noContacts"> {{each.phone}}</a></p><!--The above target expression open a new window except when the link is to an email-->
+						<p><span class="actionWhy">Action</span>: Ask <a ng-href="{{each.contactLink}}" ng-class="each.contactLink != '' ? 'links' : ''" target="{{(each.contactLink.indexOf('mailto')===-1) ? '_blank' : '_self'}}" rel="noopener">{{ each.contactTitle }}</a> to {{each.position}} this bill. <a ng-href="tel:573-751-3222" class="links">573-751-3222</a></p><!--The above target expression open a new window except when the link is to an email-->
 						<p dd-text-collapse dd-text-collapse-max-length="135" dd-text-collapse-text="{{each.why}}"></p>
 				</div>
 			</section>
