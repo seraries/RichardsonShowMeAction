@@ -56,6 +56,11 @@
 				<header class="w3-container w3-center">
 					<h1>Missouri State Legislature:</h1>
 					<h2>Bills Requiring Immediate Action!</h2>
+					<div class="w3-panel w3-pale-green">
+						<p>
+						Though the 2017 session has ended, we still need to call the Governor and ask him to veto HB10, HB11, HB1194, and SB43. If he doesn't veto them by 6/26/17 they become law. See <a href="#gov" class="links">below</a> for more on these bills! 
+						</p>
+					</div>
 				</header>
 			</div>
 
@@ -176,7 +181,7 @@
 			</section>
 
 			<section class="w3-container">
-				<header>
+				<header id="gov">
 					<h3>Bills on the Governor&apos;s Desk</h3>
 				</header> 
 				<div class="w3-panel w3-card-2 w3-white" ng-repeat="each in allBills | filter: govFilter | orderBy: ['prefix', 'numberOnly']">
